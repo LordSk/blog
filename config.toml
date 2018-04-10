@@ -3,16 +3,15 @@ languageCode = "en-us"
 title = "LordSk's blog"
 theme = "hugo-nederburg-theme"
 author = "LordSk"
+disqusShortname = "lordskblog"
 
-# Enable comments by entering your Disqus shortname
-disqusShortname = ""
 # Enable Google Analytics by entering your tracking code
 googleAnalytics = ""
 preserveTaxonomyNames = true
 paginate = 5 #frontpage pagination
 
 [params]
-slogan = "Data is data"
+slogan = ""
 description = "A blog for my various projects" # meta description
 author = "LordSk"
 authorLink = "https://lordsk.github.io/"
@@ -30,11 +29,11 @@ name = "Home"
 url = ""
 
 [[params.navlinks]]
-name = "About"
-url = "about/"
+name = "CV"
+url = "cv/"
 
 [[params.navlinks]]
-name = "Get in touch"
+name = "Contact"
 url = "contact/"
 
 [params.social]
