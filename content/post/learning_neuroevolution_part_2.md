@@ -1,7 +1,7 @@
 +++
 title = "Neuroevolution: fitness and birds"
 date = 2018-04-09T16:41:44+02:00
-draft = true
+draft = false
 categories = ["AI"]
 image = "img/burds_neat_1.png"
 +++
@@ -55,7 +55,7 @@ in order to not lose the best solution in the next generation.
 
 ### Burds
 
-It is time to put all this theory into practice. I created a little simulation where 2D birds teach themselves to fly. Here is a sneak peek,
+It is time to put all this theory into practice. I created a little simulation where 2D birds teach themselves how to fly. Here is a sneak peek,
 I will talk more about it in the next post, see you then!
 
 {{< gfycat reasonableofficialaardwolf >}}
