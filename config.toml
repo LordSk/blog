@@ -30,11 +30,11 @@ url = ""
 
 [[params.navlinks]]
 name = "CV"
-url = "cv/"
+url = "cv/cv_fr"
 
 [[params.navlinks]]
 name = "Contact"
-url = "contact/"
+url = "contact/contact"
 
 [params.social]
 twitter = "https://twitter.com/LordSk_"
