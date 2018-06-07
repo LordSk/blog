@@ -50,6 +50,10 @@ title = "Software developer"
 - etc..
 - [Project page](https://github.com/LordSk/Resacred)
 
+**before 2017 - Miscellaneous projects**
+
+- [Projects page](/cv/misc_projects) 
+
 ### Professional experience
 
 **2017 (2 month) - Android prototype application for a beer bar**

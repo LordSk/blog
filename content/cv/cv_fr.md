@@ -50,6 +50,10 @@ title = "Développeur natif & web"
 - etc..
 - [Page du projet](https://github.com/LordSk/Resacred)
 
+**avant 2017 - Projets divers**
+
+- [Page des projets](/cv/misc_projects) 
+
 ### Expérience professionnelle
 
 **2017 (2 mois) - Développement d'une application prototype pour un bar à bière**
