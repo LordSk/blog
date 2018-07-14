@@ -6,7 +6,8 @@ tags = []
 title = "Remaking Sacred, part 1: Introduction and textures"
 topics = []
 categories = ["Resacred"]
-image = "https://i.imgur.com/nXHUcuK.jpg"
+image = "img/resacred/sacred_gold_reference.jpg"
+thumbnail = "img/resacred/sacred_gold_reference.jpg"
 
 +++
 ### Introduction

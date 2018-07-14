@@ -4,6 +4,7 @@ date = 2018-04-09T16:41:44+02:00
 draft = false
 categories = ["AI"]
 image = "img/burds_neat_1.png"
+thumbnail = "img/burds_neat_1.png"
 +++
 
 Last time we established what the basic concept of **neuroevolution** is and I used a simple diagram to illustrate it.

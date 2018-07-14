@@ -4,6 +4,7 @@ date = 2018-04-17T13:23:11+02:00
 draft = false
 categories = ["AI"]
 image = "img/burds_1.jpg"
+thumbnail = "img/burds_1.jpg"
 +++
 
 We now know how to train feed forward neural networks through evolution. Let's see how it fairs in a "real" environment.

@@ -3,6 +3,7 @@ title = "0xed: the choice of GUI library"
 date = 2018-06-17T20:17:26+02:00
 draft = false
 image = "img/0xed/0xed_screen_1.png"
+thumbnail = "img/0xed/0xed_screen_1.png"
 categories = ["0xed"]
 +++
 
