@@ -203,6 +203,29 @@ h4 {
     background: url("chevron-right.png") no-repeat left center;
     padding-left: 15px;
 }
+
+.comp_flex .star1 {
+    background: url("star_1.png") no-repeat left center;
+    padding-left: 38px;
+}
+.comp_flex .star2 {
+    background: url("star_2.png") no-repeat left center;
+    padding-left: 38px;
+}
+.comp_flex .star3 {
+    background: url("star_3.png") no-repeat left center;
+    padding-left: 38px;
+}
+
+.comp_flex .span_years {
+    color: #88c4ff;
+    padding-left: 5px;
+}
+
+.comp_flex:hover .span_years {
+    color: #0382ff;
+}
+
 .comp_flex h4 {
     font-size: 1.2em;
     padding-bottom: 4px;

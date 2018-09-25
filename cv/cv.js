@@ -1,7 +1,7 @@
 //
 
 $("div.education .titre, div.projet .titre, div.travail .titre").click(function() {
-    $(this).next().toggle({duration: "0.5s", easing: "swing"});
+    $(this).next().slideToggle({duration: "0.5s", easing: "swing"});
 });
 
 // turn images into links

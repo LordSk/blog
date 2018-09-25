@@ -5,18 +5,30 @@ body {
     font-family: Calibri;
     padding: 0;
     margin: 0;
+    max-width: 1200px;
 }
 
 h1 {
     color: #ffffff;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
     font-size: 1.6em;
     padding-left: 7px;
 }
 
-.head {
-    margin: 10px;
+.head .title {
+    display: flex;
+    margin: auto;
+}
+
+.head .title a {
+    margin-left: 50px;
+    vertical-align: middle;
+}
+
+.head_team {
+    padding: 10px;
 }
 
 .content {
@@ -32,21 +44,20 @@ h1 {
     user-select: none;
 }
 
-.selected_hero_list {
-    margin-bottom: 25px;
-}
-
 .hero_button {
     margin: 0;
     padding: 0;
     display: inline-block;
-    background: black;
     border: 1px solid black;
 }
 
 .hero_button img {
     width: 95px;
     height: 53px;
+}
+
+.hero_button.grayed {
+    background: #000;
 }
 
 .hero_button.grayed img {
@@ -81,10 +92,11 @@ h1 {
     width: 485px;
     height: 55px;
     background: #4d4d4d;
+    margin-bottom: 25px;
 }
 
 .input_filter, .button_clear {
-    font-size: 2em;
+    font-size: 1em;
 }
 
 ul.tag_select {
@@ -92,7 +104,6 @@ ul.tag_select {
     display: flex;
     margin: 0;
     padding: 0;
-    margin-top: 15px;
 }
 
 ul.tag_select li {
@@ -119,30 +130,35 @@ ul.tag_select li.selected {
     flex: 25%;
 }
 
-.lineup_stats h3 {
+.lineup_stats p {
     margin: 5px;
-    color: black;
+    color: #c0ffac;
+}
+
+.lineup_stats .bars {
+    width: 150px;
 }
 
 .progress_bar {
     width: 100%;
-    height: 20px;
-    border-radius: 7px;
-    background: #2d2d2d;
+    max-width: 200px;
     overflow: hidden;
-    box-shadow: inset 0 0 10px;
+    height: 5px;
+    border-radius: 2px;
+    background: #1d1d1d;
 }
 
 .progress_bar .bar {
     width: 0%;
     height: 100%;
-    background: rgb(0, 89, 255);
+    background: rgb(49, 204, 1);
 }
 
 .tabs {
     display: flex;
     margin: 0;
     padding: 0;
+    background: #1d2024;
 }
 
 .tabs li {
@@ -179,6 +195,8 @@ ul.tag_select li.selected {
 
 .head_player {
     display: flex;
+    width: 525px;
+    background: #272b30;
 }
 
 .head_player h1 {
@@ -199,4 +217,29 @@ ul.tag_select li.selected {
 
 .head_player .selected_hero_list .hero_button {
     display: block;
+}
+
+.overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.95);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.overlay .generated_img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.filter {
+    display: flex;
 }

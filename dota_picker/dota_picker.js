@@ -314,3 +314,38 @@ function applyFilter()
         }
     }
 }
+
+function selectText(element)
+{
+    var doc = document;
+    if (doc.body.createTextRange) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
+
+let generatedImg = $('.generated_img img');
+let divOverlay = $('.overlay');
+
+divOverlay.click(function() {
+    $(this).hide();
+});
+
+$('#copy_button').click(function() {
+    let divToCopy = $('div.head_player');
+    if(divToCopy.is(':hidden')) {
+        divToCopy = $('div.head_team .selected_hero_list');
+    }
+
+    html2canvas(divToCopy.get(0)).then(canvas => {
+        generatedImg.attr('src', canvas.toDataURL());
+        divOverlay.show();
+    });
+});

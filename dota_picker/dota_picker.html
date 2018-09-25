@@ -13,8 +13,12 @@
     </ul>
 
     <div class="head">
-        <div class="head_team">
+        <div class="title">
             <h1>Selected heroes</h1>
+            <a href="#" id="copy_button">Share as image</a>
+        </div>
+        
+        <div class="head_team">
             <div class="selected_hero_list"></div>
         </div>
 
@@ -42,17 +46,19 @@
          </div>
         
         <h1>Filter</h1>
-        <input type="text" class="input_filter" value="" autocomplete="off"/>
-        <ul class="tag_select">
-            <li>Carry</li>
-            <li>Support</li>
-            <li>Nuker</li>
-            <li>Disabler</li>
-            <li>Initiator</li>
-            <li>Pusher</li>
-            <li>Escape</li>
-            <li>Durable</li>
-        </ul>
+        <div class="filter">
+            <input type="text" class="input_filter" value="" autocomplete="off"/>
+            <ul class="tag_select">
+                <li>Carry</li>
+                <li>Support</li>
+                <li>Nuker</li>
+                <li>Disabler</li>
+                <li>Initiator</li>
+                <li>Pusher</li>
+                <li>Escape</li>
+                <li>Durable</li>
+            </ul>
+        </div>
     </div>
 
     <div class="content">
@@ -175,26 +181,33 @@
         <div class="hero_button" name="grimstroke" search="Grimstroke" roles="Support Nuker Disabler Escape"><img src="res/grimstroke.png"></div>
     </div>
     <div class="lineup_stats">
-        <h3>Carry</h3>
+        <p>Carry</p>
         <div class="progress_bar" val="0" id="pb_Carry"></div>
-        <h3>Support</h3>
+        <p>Support</p>
         <div class="progress_bar" val="0" id="pb_Support"></div>
-        <h3>Nuker</h3>
+        <p>Nuker</p>
         <div class="progress_bar" val="0" id="pb_Nuker"></div>
-        <h3>Disabler</h3>
+        <p>Disabler</p>
         <div class="progress_bar" val="0" id="pb_Disabler"></div>
-        <h3>Initiator</h3>
+        <p>Initiator</p>
         <div class="progress_bar" val="0" id="pb_Initiator"></div>
-        <h3>Pusher</h3>
+        <p>Pusher</p>
         <div class="progress_bar" val="0" id="pb_Pusher"></div>
-        <h3>Escape</h3>
+        <p>Escape</p>
         <div class="progress_bar" val="0" id="pb_Escape"></div>
-        <h3>Durable</h3>
+        <p>Durable</p>
         <div class="progress_bar" val="0" id="pb_Durable"></div>
     </div>
+    </div>
+
+    <div class="overlay">
+        <div class="generated_img">
+            <img>
+        </div>
     </div>
 </body>
 
 <script src="jquery-3.3.1.min.js"></script>
+<script src="html2canvas.min.js"></script>
 <script src="dota_picker.js"></script>
 </html>
