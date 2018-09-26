@@ -82,7 +82,7 @@ varying vec3 vert_pos;
 void main()
 {
     float f = abs(vert_pos.z) * (1.0/300.0);
-    gl_FragColor = vec4(vec3(pow(f, 6.0)), 1.0);
+    gl_FragColor = vec4(vec3(pow(f, 6.0 * (1.0 - f*f))), 1.0);
 }
 </div>
 

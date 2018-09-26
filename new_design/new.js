@@ -8,7 +8,7 @@ const rdrHeight = 250;
 
 let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
-let camera = new THREE.PerspectiveCamera( 30, rdrWidth / rdrHeight, 0.001, 4000 );
+let camera = new THREE.PerspectiveCamera( 30, rdrWidth / rdrHeight, 0.001, 5000 );
 
 let renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize( rdrWidth, rdrHeight );
@@ -132,10 +132,14 @@ texPlanet1.wrapT = THREE.RepeatWrapping;
 texPlanet1.repeat.set(1, 1);*/
 
 let planetList = [];
-let planet = spawnPlanet(-850, -400, 700, 1, 5, 2);
+let radius = rand(500.0, 1000.0);
+let planet = spawnPlanet(rand(-1000.0, 1000.0), -150 - radius * 0.5, radius, rand(-3.0, 3.0),
+                rand(4.0, 8.0), rand(2, 6));
 
 let timeClock = new THREE.Clock();
 let t0 = timeClock.getElapsedTime();
+let timeScale = 1.0;
+let time = 0.0;
 
 function animate()
 {
@@ -144,10 +148,11 @@ function animate()
     }, 1000/30.0);
     
     let t1 = timeClock.getElapsedTime();
-    let delta = t1 - t0;
+    let delta = (t1 - t0) * timeScale;
+    time += delta;
     t0 = t1;
 
-    planeMesh.material.uniforms.u_time.value = t1 * 10;
+    planeMesh.material.uniforms.u_time.value = time * 10;
 
     let noiseScale = [];
     let elevation = [];
@@ -186,19 +191,21 @@ function animate()
                 let newVel = new THREE.Vector3().crossVectors(tangent, arm);
                 newVel.setLength(m.velocity.length());
                 m.velocity = newVel;
-
-                /*m.polar.phi += m.polarVel.phi * delta;
-                m.polar.theta += m.polarVel.theta * delta;
-                m.polar.phi = m.polar.phi % Math.PI;
-                m.polar.theta = m.polar.theta % Math.PI;
-
-                //console.log(m.polar);
-                let local = new THREE.Vector3().setFromSpherical(m.polar);*/
                 
                 // apply velocity
                 m.position = p.position.clone();
                 m.position.add(newVel.clone().multiplyScalar(delta));
             }
+        }
+
+        if(p.position.y > 1500) {
+            planetList.splice(i-1, 1);
+            onPlanetOutside(p);
+
+            // spawn a new planet
+            let radius = rand(500.0, 1000.0);
+            spawnPlanet(rand(-1000.0, 1000.0), -150 - radius * 0.5, radius, rand(-3.0, 3.0),
+                rand(4.0, 8.0), rand(2, 6));
         }
     }
 
@@ -209,9 +216,10 @@ animate();
 
 function spawnPlanet(x, y, radius, dx, dy, moonCount)
 {
-    let sphereGeo = new THREE.SphereGeometry(radius, 32, 32);
+    let sphereGeo = new THREE.SphereGeometry(radius, 24, 24);
     let planetMesh = new THREE.Mesh(sphereGeo, matPlanet.clone());
-    planetMesh.material.uniforms.u_color.value = new THREE.Vector3(0.9, 0.9, 0.9);
+    const c = rand(0.6, 0.95);
+    planetMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c, c);
     planetMesh.position.x = x;
     planetMesh.position.y = y;
     planetMesh.position.z = -2000;
@@ -223,7 +231,7 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
     for(let i = 0; i < moonCount; i++) {
         spawnMoon(planetMesh, rand(20, 80.0), rand(400, 800),
             rand(0, Math.PI * 2.0), rand(0, Math.PI * 2.0),
-            rand(-1.0, 1.0), rand(-1.0, 1.0), rand(-1.0, 1.0), rand(20.0, 40.0));
+            rand(-1.0, 1.0), rand(-1.0, 1.0), rand(-1.0, 1.0), rand(10.0, 30.0));
     }
 
     return planetMesh;
@@ -231,19 +239,15 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
 
 function spawnMoon(planet, radius, dist, cx, cy, vx, vy, vz, speed)
 {
-    let sphereGeo = new THREE.SphereGeometry(radius, 16, 16);
+    let sphereGeo = new THREE.SphereGeometry(radius, 12, 12);
     let moonMesh = new THREE.Mesh(sphereGeo, matPlanet.clone());
-    moonMesh.material.uniforms.u_color.value = new THREE.Vector3(0.7, 0.7, 0.7);
+    const c = rand(0.5, 0.8);
+    moonMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c, c);
     let polar = new THREE.Spherical(planet.radius + dist, cx, cy);
     let local = new THREE.Vector3().setFromSpherical(polar);
     moonMesh.position.x = planet.position.x + local.x;
     moonMesh.position.y = planet.position.y + local.y;
     moonMesh.position.z = planet.position.z + local.z;
-    moonMesh.polar = polar;
-
-    //console.log(polar, local, moonMesh.position);
-
-    //moonMesh.polarVel = new THREE.Spherical(planet.radius + dist, vx, vy);
     moonMesh.velocity = new THREE.Vector3(vx, vy, vz).setLength(speed);
     scene.add(moonMesh);
 
@@ -256,6 +260,12 @@ function spawnMoon(planet, radius, dist, cx, cy, vx, vy, vz, speed)
 function onPlanetOutside(planet)
 {
     scene.remove(planet);
+    if(planet.moonList) {
+        for(let j = 0; j < planet.moonList.length; j++) {
+            let m = planet.moonList[j];
+            scene.remove(m);
+        }
+    }
 }
 
 function rand(min, max)
