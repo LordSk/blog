@@ -26,3 +26,27 @@ canvas {
     padding: 10px;
     text-align: center;
 }
+
+.topBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.topBar ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+}
+
+.topBar a {
+    color: #a2a2a2;
+    text-decoration: none;
+    padding: 5px 10px 5px 10px;
+    font-weight: bold;
+}
+
+.topBar a:hover, .topBar a:visited {
+    color: #000;
+}

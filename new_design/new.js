@@ -44,6 +44,9 @@ camera.position.z = 0;
 camera.position.y = 20;
 camera.lookAt.y = 10;
 
+const planetGeo = new THREE.SphereBufferGeometry(1.0, 24, 24);
+const ringGeo = new THREE.RingBufferGeometry(0.7, 1.0, 64);
+
 
 // y is up vector
 /*const gridScale = 10;
@@ -66,51 +69,32 @@ for(let x = 0; x < 100; x++) {
     scene.add(lineGrid);
 }*/
 
+let objLoader = new THREE.OBJLoader();
+let shipGeo = null;
+
+objLoader.load('ship6.obj',
+	function(object) { // done
+        shipGeo = object.children[0].geometry;
+        spawnShip(0, 10, -50, 5, 0, 0); // TODO: remove
+	},
+	function(xhr) { // progress
+		//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+	},
+	function(error) { // error
+		console.log('Could not load ship6.obj');
+	}
+);
+
 // plane
-let planeGeo = new THREE.BufferGeometry();
-let planeVertArray = [];
-
-for(let z = 0; z < 300; z++) {
-    for(let x = 0; x < 600; x++) {
-        // first tri
-        planeVertArray.push(x);
-        planeVertArray.push(0);
-        planeVertArray.push(z);
-
-        planeVertArray.push(x + 1.0);
-        planeVertArray.push(0);
-        planeVertArray.push(z + 1.0);
-
-        planeVertArray.push(x + 1.0);
-        planeVertArray.push(0);
-        planeVertArray.push(z);
-
-        // second tri
-        planeVertArray.push(x);
-        planeVertArray.push(0);
-        planeVertArray.push(z);
-
-        planeVertArray.push(x);
-        planeVertArray.push(0);
-        planeVertArray.push(z + 1.0);
-
-        planeVertArray.push(x + 1.0);
-        planeVertArray.push(0);
-        planeVertArray.push(z + 1.0);
-    }
-}
-
-let planeVerts = new Float32Array(planeVertArray);
-planeGeo.addAttribute('position', new THREE.BufferAttribute(planeVerts, 3));
+let planeGeo = new THREE.PlaneBufferGeometry(1200, 300, 600, 300);
 let planeMaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
 let planeMesh = new THREE.Mesh(planeGeo, matDepth);
 
-planeMesh.position.x = -600;
-planeMesh.position.z = -299;
+planeMesh.position.x = 0;
+planeMesh.position.z = -150;
 planeMesh.position.y = 0;
-planeMesh.scale.x = 2.0;
-
-scene.add(planeMesh);
+planeMesh.rotation.x = -Math.PI * 0.5;
+//scene.add(planeMesh);
 
 // "night" sky
 /*let texSky = new THREE.TextureLoader().load("tex_stars.png");
@@ -198,6 +182,10 @@ function animate()
             }
         }
 
+        if(p.ring) {
+            p.ring.position.copy(p.position);
+        }
+
         if(p.position.y > 1500) {
             planetList.splice(i-1, 1);
             onPlanetOutside(p);
@@ -205,7 +193,7 @@ function animate()
             // spawn a new planet
             let radius = rand(500.0, 1000.0);
             spawnPlanet(rand(-1000.0, 1000.0), -150 - radius * 0.5, radius, rand(-3.0, 3.0),
-                rand(4.0, 8.0), rand(2, 6));
+                rand(4.0, 8.0), rand(1, 5));
         }
     }
 
@@ -216,22 +204,41 @@ animate();
 
 function spawnPlanet(x, y, radius, dx, dy, moonCount)
 {
-    let sphereGeo = new THREE.SphereGeometry(radius, 24, 24);
-    let planetMesh = new THREE.Mesh(sphereGeo, matPlanet.clone());
+    moonCount = Math.round(moonCount);
+    let planetMesh = new THREE.Mesh(planetGeo, matPlanet.clone());
     const c = rand(0.6, 0.95);
     planetMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c, c);
     planetMesh.position.x = x;
     planetMesh.position.y = y;
     planetMesh.position.z = -2000;
     planetMesh.velocity = {x: dx, y: dy};
+    planetMesh.scale.setScalar(radius);
     planetMesh.radius = radius;
     scene.add(planetMesh);
     planetList.push(planetMesh);
 
-    for(let i = 0; i < moonCount; i++) {
-        spawnMoon(planetMesh, rand(20, 80.0), rand(400, 800),
-            rand(0, Math.PI * 2.0), rand(0, Math.PI * 2.0),
-            rand(-1.0, 1.0), rand(-1.0, 1.0), rand(-1.0, 1.0), rand(10.0, 30.0));
+    if(Math.random() > 0.5) {
+        //console.log("moons: ", moonCount);
+        for(let i = 0; i < moonCount; i++) {
+            spawnMoon(planetMesh, rand(20, 80.0), rand(400, 800),
+                rand(0, Math.PI * 2.0), rand(0, Math.PI * 2.0),
+                rand(-1.0, 1.0), rand(-1.0, 1.0), rand(-1.0, 1.0), rand(10.0, 30.0));
+        }
+    }
+    else {
+        //console.log("ring");
+        let ringMat = matPlanet.clone();
+        ringMat.side = THREE.DoubleSide;
+        const c = rand(0.6, 0.95);
+        ringMat.uniforms.u_color.value = new THREE.Vector3(c, c, c);
+        let ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.scale.x = radius * 1.8;
+        ringMesh.scale.y = radius * 1.8;
+        ringMesh.rotation.set(rand(0.0, Math.PI), rand(0.0, Math.PI), rand(0.0, Math.PI));
+        ringMesh.position.copy(planetMesh.position);
+
+        planetMesh.ring = ringMesh;
+        scene.add(ringMesh);
     }
 
     return planetMesh;
@@ -239,8 +246,7 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
 
 function spawnMoon(planet, radius, dist, cx, cy, vx, vy, vz, speed)
 {
-    let sphereGeo = new THREE.SphereGeometry(radius, 12, 12);
-    let moonMesh = new THREE.Mesh(sphereGeo, matPlanet.clone());
+    let moonMesh = new THREE.Mesh(planetGeo, matPlanet.clone());
     const c = rand(0.5, 0.8);
     moonMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c, c);
     let polar = new THREE.Spherical(planet.radius + dist, cx, cy);
@@ -249,6 +255,7 @@ function spawnMoon(planet, radius, dist, cx, cy, vx, vy, vz, speed)
     moonMesh.position.y = planet.position.y + local.y;
     moonMesh.position.z = planet.position.z + local.z;
     moonMesh.velocity = new THREE.Vector3(vx, vy, vz).setLength(speed);
+    moonMesh.scale.setScalar(radius);
     scene.add(moonMesh);
 
     if(!planet.moonList) {
@@ -266,6 +273,9 @@ function onPlanetOutside(planet)
             scene.remove(m);
         }
     }
+    if(planet.ring) {
+        scene.remove(planet.ring);
+    }
 }
 
 function rand(min, max)
@@ -273,13 +283,12 @@ function rand(min, max)
     return min + Math.random() * (max - min);
 }
 
-function wrapAngle(a)
+function spawnShip(x, y, z, scale, vx, vz)
 {
-    if(a > Math.PI) {
-        a -= Math.PI;
-    }
-    else if(a < -Math.PI) {
-        a += Math.PI;
-    }
-    return a;
+    let shipMat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    let shipMesh = new THREE.Mesh(shipGeo, shipMat);
+    shipMesh.position.set(x, y, z);
+    shipMesh.scale.setScalar(scale);
+    shipMesh.veolicty = new THREE.Vector3(vx, 0, vz);
+    scene.add(shipMesh);
 }

@@ -7,6 +7,14 @@
 </head>
 
 <body>
+<div class="topBar">
+    <ul>
+        <li><a href="/">HOME</a></li>
+        <li><a href="/blog">BLOG</a></li>
+        <li><a href="/cv">CV</a></li>
+        <li><a href="/contact">CONTACT</a></li>
+    </ul>
+</div>
 <div id="animatedHeader"></div>
 <div class="content">
     <h1 class="center">THOMAS LEROY</h1>
@@ -93,20 +101,18 @@ uniform sampler2D u_texture;
 varying vec3 vert_pos;
 varying vec2 vert_uv;
 
-#define PI (3.14159265359)
-
 void main()
 {
-    vec3 tex = texture2D(u_texture, vert_uv).rgb;
+    //vec3 tex = texture2D(u_texture, vert_uv).rgb;
     vec3 color = u_color;
 
-    float a = 1.0 - (min(max(0.0, vert_pos.y), 700.0) / 700.0);
+    float a = 1.0 - (min(max(0.0, vert_pos.y - 100.0), 550.0) / 550.0);
     gl_FragColor = vec4(mix(color, vec3(1), a), 1.0);
 }
 </div>
 
 <script src="jquery-3.3.1.min.js"></script>
-<script src="three.js"></script>
-<script src="perlin.js"></script>
+<script src="three.min.js"></script>
+<script src="OBJLoader.js"></script>
 <script src="new.js"></script>
 </html>
