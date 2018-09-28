@@ -34,7 +34,6 @@ uniform vec4 u_noiseScale;
 uniform vec4 u_elevation;
 uniform float u_time;
 varying vec3 vert_pos;
-varying vec2 vert_uv;
 
 vec3 permute(vec3 x) 
 {
@@ -72,7 +71,7 @@ void main()
 {
     vec4 pos = modelMatrix * vec4(position, 1.0);
     float far = max(0.0, -pos.z) / 300.0;
-    float y1 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.x) * (u_elevation.x * 1.0 + far * 20.0);
+    float y1 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.x) * (u_elevation.x * 1.0 + far * 10.0);
     float y2 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.y) * u_elevation.y;
     float y3 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.z) * u_elevation.z;
     float y4 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.w) * u_elevation.w;
@@ -80,7 +79,6 @@ void main()
 
     gl_Position = projectionMatrix * viewMatrix * pos;
     vert_pos = pos.xyz;
-    vert_uv = uv;
 }
 </div>
 
@@ -89,25 +87,53 @@ varying vec3 vert_pos;
 
 void main()
 {
-    float f = abs(vert_pos.z) * (1.0/300.0);
+    float f = min(abs(vert_pos.z), 300.0) / 300.0;
     gl_FragColor = vec4(vec3(pow(f, 6.0 * (1.0 - f*f))), 1.0);
+}
+</div>
+
+<div style="display:none" id="vertPlanet">
+varying vec3 vert_pos;
+varying vec3 vert_normal;
+
+void main()
+{
+    vec4 pos = modelMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * viewMatrix * pos;
+    vert_pos = pos.xyz;
+    vert_normal = normal;
 }
 </div>
 
 <div style="display:none" id="fragPlanet">
 uniform vec3 u_color;
-uniform sampler2D u_texture;
 
 varying vec3 vert_pos;
-varying vec2 vert_uv;
 
 void main()
 {
-    //vec3 tex = texture2D(u_texture, vert_uv).rgb;
     vec3 color = u_color;
 
     float a = 1.0 - (min(max(0.0, vert_pos.y - 100.0), 550.0) / 550.0);
     gl_FragColor = vec4(mix(color, vec3(1), a), 1.0);
+}
+</div>
+
+<div style="display:none" id="fragShip">
+uniform vec3 u_color;
+
+varying vec3 vert_pos;
+varying vec3 vert_normal;
+
+void main()
+{
+    vec3 color = u_color;
+
+    float a = min(abs(vert_pos.z), 300.0) / 300.0;
+    float f = pow(a, 4.0 * (1.0 - a*a));
+    // lighting
+    float d = 0.7 + dot(normalize(vert_normal), normalize(-vec3(1, -1, 0.5))) * 0.3;
+    gl_FragColor = vec4(mix(color * d, vec3(1), f), 1.0);
 }
 </div>
 

@@ -4,7 +4,7 @@
 // smoke trail
 
 const rdrWidth = window.innerWidth;
-const rdrHeight = 250;
+const rdrHeight = 300;
 
 let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
@@ -30,14 +30,22 @@ let matDepth = new THREE.ShaderMaterial({
 	fragmentShader: document.getElementById('fragmentShader').textContent
 });
 
-let matPlanet = new THREE.ShaderMaterial({
+const matPlanet = new THREE.ShaderMaterial({
 
 	uniforms: {
         u_color: { value: new THREE.Vector3(1, 0, 0) },
-        u_texture: { value: new THREE.Vector3(1, 0, 0) }
 	},
-	vertexShader: document.getElementById('vertexShader').textContent,
+	vertexShader: document.getElementById('vertPlanet').textContent,
 	fragmentShader: document.getElementById('fragPlanet').textContent
+});
+
+const matShip = new THREE.ShaderMaterial({
+
+	uniforms: {
+        u_color: { value: new THREE.Vector3(1, 0, 0) },
+	},
+	vertexShader: document.getElementById('vertPlanet').textContent,
+	fragmentShader: document.getElementById('fragShip').textContent
 });
 
 camera.position.z = 0;
@@ -47,35 +55,13 @@ camera.lookAt.y = 10;
 const planetGeo = new THREE.SphereBufferGeometry(1.0, 24, 24);
 const ringGeo = new THREE.RingBufferGeometry(0.7, 1.0, 64);
 
-
-// y is up vector
-/*const gridScale = 10;
-const gridB = gridScale*0.5 * 10;
-for(let z = 0; z < 100; z++) {
-    let geoGrid = new THREE.Geometry();
-    geoGrid.vertices.push(new THREE.Vector3(-gridB, 0, -gridB + z * gridScale));
-    geoGrid.vertices.push(new THREE.Vector3(gridB, 0, -gridB + z * gridScale));
-    let matGrid = new THREE.LineBasicMaterial( { color: 0x000000 } );
-    let lineGrid = new THREE.Line( geoGrid, matGrid );
-    scene.add(lineGrid);
-}
-
-for(let x = 0; x < 100; x++) {
-    let geoGrid = new THREE.Geometry();
-    geoGrid.vertices.push(new THREE.Vector3(-gridB + x * gridScale, 0, -gridB));
-    geoGrid.vertices.push(new THREE.Vector3(-gridB + x * gridScale, 0, gridB));
-    let matGrid = new THREE.LineBasicMaterial( { color: 0x000000 } );
-    let lineGrid = new THREE.Line( geoGrid, matGrid );
-    scene.add(lineGrid);
-}*/
-
 let objLoader = new THREE.OBJLoader();
 let shipGeo = null;
 
+// load ship model
 objLoader.load('ship6.obj',
 	function(object) { // done
         shipGeo = object.children[0].geometry;
-        spawnShip(0, 10, -50, 5, 0, 0); // TODO: remove
 	},
 	function(xhr) { // progress
 		//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
@@ -94,28 +80,11 @@ planeMesh.position.x = 0;
 planeMesh.position.z = -150;
 planeMesh.position.y = 0;
 planeMesh.rotation.x = -Math.PI * 0.5;
-//scene.add(planeMesh);
-
-// "night" sky
-/*let texSky = new THREE.TextureLoader().load("tex_stars.png");
-texSky.wrapS = THREE.RepeatWrapping;
-texSky.wrapT = THREE.RepeatWrapping;
-texSky.repeat.set(25, 10);
-
-let skyGeo = new THREE.SphereGeometry(1000, 32, 32);
-let skyMat = new THREE.MeshBasicMaterial( { color: 0xffffff, map: texSky } );
-skyMat.side = THREE.BackSide;
-let skyMesh = new THREE.Mesh(skyGeo, skyMat);
-skyMesh.position.y = 15;
-skyMesh.position.z = 0;
-scene.add(skyMesh);*/
-
-/*let texPlanet1 = new THREE.TextureLoader().load("planet_tex1.jpg");
-texPlanet1.wrapS = THREE.RepeatWrapping;
-texPlanet1.wrapT = THREE.RepeatWrapping;
-texPlanet1.repeat.set(1, 1);*/
+scene.add(planeMesh);
 
 let planetList = [];
+let shipList = [];
+
 let radius = rand(500.0, 1000.0);
 let planet = spawnPlanet(rand(-1000.0, 1000.0), -150 - radius * 0.5, radius, rand(-3.0, 3.0),
                 rand(4.0, 8.0), rand(2, 6));
@@ -125,11 +94,13 @@ let t0 = timeClock.getElapsedTime();
 let timeScale = 1.0;
 let time = 0.0;
 
+let spawnShipCd = 3.0;
+
 function animate()
 {
-    setTimeout(function() {
+    //setTimeout(function() {
         requestAnimationFrame(animate);
-    }, 1000/30.0);
+    //}, 1000/60.0);
     
     let t1 = timeClock.getElapsedTime();
     let delta = (t1 - t0) * timeScale;
@@ -186,8 +157,8 @@ function animate()
             p.ring.position.copy(p.position);
         }
 
-        if(p.position.y > 1500) {
-            planetList.splice(i-1, 1);
+        if(p.position.y > 1600) {
+            planetList.splice(i, 1);
             onPlanetOutside(p);
 
             // spawn a new planet
@@ -197,7 +168,26 @@ function animate()
         }
     }
 
-	renderer.render( scene, camera );
+    
+    if(spawnShipCd > 0.0) {
+        spawnShipCd -= delta;
+        if(spawnShipCd <= 0.0) {
+            spawnRandomShip();
+        }
+    }
+
+    for(let i = 0; i < shipList.length; i++) {
+        let s = shipList[i];
+        s.position.add(s.velocity.clone().multiplyScalar(delta));
+
+        if(Math.abs(s.position.x) > 1000.0) {
+            onShipOutside(s);
+            shipList.splice(i, 1);
+            spawnShipCd = rand(5.0, 10.0);
+        }
+    }
+
+	renderer.render(scene, camera);
 }
 
 animate();
@@ -206,7 +196,7 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
 {
     moonCount = Math.round(moonCount);
     let planetMesh = new THREE.Mesh(planetGeo, matPlanet.clone());
-    const c = rand(0.6, 0.95);
+    const c = rand(0.6, 0.85);
     planetMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c, c);
     planetMesh.position.x = x;
     planetMesh.position.y = y;
@@ -285,10 +275,36 @@ function rand(min, max)
 
 function spawnShip(x, y, z, scale, vx, vz)
 {
-    let shipMat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    let shipMat = matShip.clone();
+    shipMat.uniforms.u_color.value.set(0, 0, 0);
     let shipMesh = new THREE.Mesh(shipGeo, shipMat);
     shipMesh.position.set(x, y, z);
     shipMesh.scale.setScalar(scale);
-    shipMesh.veolicty = new THREE.Vector3(vx, 0, vz);
+    shipMesh.velocity = new THREE.Vector3(vx, 0, vz);
+
+    let vn = new THREE.Vector3(vx, 0, vz).normalize();
+    let angle = Math.atan2(vn.x, vn.z);
+    shipMesh.rotation.y = angle - Math.PI;
+
     scene.add(shipMesh);
+    shipList.push(shipMesh);
+}
+
+function spawnRandomShip()
+{
+    const speed = rand(160.0, 200.0);
+    let z = rand(-100.0, -250.0);
+    let zend = rand(-50.0, -400.0);
+    const dx = rand(0.0, 1.0) > 0.5 ? 1.0: -1.0;
+    let v = new THREE.Vector2(-dx * 1200.0, zend - z).setLength(speed);
+    let x = 600.0 * dx;
+    let y = 25.0;
+    let scale = rand(8.0, 12.0);
+    //console.log('spawn ship', x, y, z, v);
+    spawnShip(x, y, z, scale, v.x, v.y);
+}
+
+function onShipOutside(ship)
+{
+    scene.remove(ship);
 }
