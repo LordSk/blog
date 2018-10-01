@@ -48,6 +48,18 @@ const matShip = new THREE.ShaderMaterial({
 	fragmentShader: document.getElementById('fragShip').textContent
 });
 
+const matSmoke = new THREE.ShaderMaterial({
+
+	uniforms: {
+        u_time: 0,
+        u_texture: null
+    },
+    transparent: true,
+
+	vertexShader: document.getElementById('vertSmoke').textContent,
+	fragmentShader: document.getElementById('fragSmoke').textContent
+});
+
 camera.position.z = 0;
 camera.position.y = 20;
 camera.lookAt.y = 10;
@@ -71,6 +83,28 @@ objLoader.load('ship6.obj',
 	}
 );
 
+// smoke texture
+let texSmoke = new THREE.TextureLoader().load("smoke_256.jpg");
+texSmoke.wrapS = THREE.ClampToEdgeWrapping;
+texSmoke.wrapT = THREE.ClampToEdgeWrapping;
+texSmoke.repeat.set(1, 1);
+texSmoke.flipY = false;
+
+// smoke texture
+let texSmoke1 = new THREE.TextureLoader().load("smoke1.png");
+texSmoke1.wrapS = THREE.ClampToEdgeWrapping;
+texSmoke1.wrapT = THREE.ClampToEdgeWrapping;
+texSmoke1.repeat.set(1, 1);
+
+let spriteMaterial = matSmoke.clone();
+//let spriteMaterial = new THREE.SpriteMaterial({ map: texSmoke, color: 0xffffff });
+spriteMaterial.uniforms.u_texture.value = texSmoke;
+let smokeSprite = new THREE.Sprite(spriteMaterial);
+smokeSprite.center.set(0.5, 0.5);
+smokeSprite.position.set(0, 20, -50);
+smokeSprite.scale.setScalar(10);
+scene.add(smokeSprite);
+
 // plane
 let planeGeo = new THREE.PlaneBufferGeometry(1200, 300, 600, 300);
 let planeMaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
@@ -80,7 +114,7 @@ planeMesh.position.x = 0;
 planeMesh.position.z = -150;
 planeMesh.position.y = 0;
 planeMesh.rotation.x = -Math.PI * 0.5;
-scene.add(planeMesh);
+//scene.add(planeMesh);
 
 let planetList = [];
 let shipList = [];
@@ -108,6 +142,8 @@ function animate()
     t0 = t1;
 
     planeMesh.material.uniforms.u_time.value = time * 10;
+
+    spriteMaterial.uniforms.u_time.value = time;
 
     let noiseScale = [];
     let elevation = [];
@@ -157,7 +193,7 @@ function animate()
             p.ring.position.copy(p.position);
         }
 
-        if(p.position.y > 1600) {
+        if(p.position.y > 800 + p.radius) {
             planetList.splice(i, 1);
             onPlanetOutside(p);
 

@@ -137,6 +137,39 @@ void main()
 }
 </div>
 
+<div style="display:none" id="vertSmoke">
+varying vec3 vert_pos;
+varying vec2 vert_uv;
+
+void main()
+{
+    vec4 pos = modelMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * viewMatrix * pos;
+    vert_pos = pos.xyz;
+    vert_uv = uv;
+}
+</div>
+
+<div style="display:none" id="fragSmoke">
+uniform float u_time;
+uniform sampler2D u_texture;
+
+varying vec3 vert_pos;
+varying vec2 vert_uv;
+
+void main()
+{
+    const float frameCount = 30.0;
+    const float frameW = 6.0;
+    float frame = mod(floor(u_time * frameCount), frameCount);
+    float x = mod(frame, frameW);
+    float y = floor(frame / frameW);
+    vec2 uv = (vert_uv + vec2(x, y)) / 6.0;
+    vec3 color = texture2D(u_texture, uv).rgb;
+    gl_FragColor = vec4(color * pow(vert_uv.y, 3.0), color.r);
+}
+</div>
+
 <script src="jquery-3.3.1.min.js"></script>
 <script src="three.min.js"></script>
 <script src="OBJLoader.js"></script>
