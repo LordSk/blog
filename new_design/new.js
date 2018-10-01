@@ -84,26 +84,10 @@ objLoader.load('ship6.obj',
 );
 
 // smoke texture
-let texSmoke = new THREE.TextureLoader().load("smoke_256.jpg");
+let texSmoke = new THREE.TextureLoader().load("smoke1.png");
 texSmoke.wrapS = THREE.ClampToEdgeWrapping;
 texSmoke.wrapT = THREE.ClampToEdgeWrapping;
 texSmoke.repeat.set(1, 1);
-texSmoke.flipY = false;
-
-// smoke texture
-let texSmoke1 = new THREE.TextureLoader().load("smoke1.png");
-texSmoke1.wrapS = THREE.ClampToEdgeWrapping;
-texSmoke1.wrapT = THREE.ClampToEdgeWrapping;
-texSmoke1.repeat.set(1, 1);
-
-let spriteMaterial = matSmoke.clone();
-//let spriteMaterial = new THREE.SpriteMaterial({ map: texSmoke, color: 0xffffff });
-spriteMaterial.uniforms.u_texture.value = texSmoke;
-let smokeSprite = new THREE.Sprite(spriteMaterial);
-smokeSprite.center.set(0.5, 0.5);
-smokeSprite.position.set(0, 20, -50);
-smokeSprite.scale.setScalar(10);
-scene.add(smokeSprite);
 
 // plane
 let planeGeo = new THREE.PlaneBufferGeometry(1200, 300, 600, 300);
@@ -114,10 +98,13 @@ planeMesh.position.x = 0;
 planeMesh.position.z = -150;
 planeMesh.position.y = 0;
 planeMesh.rotation.x = -Math.PI * 0.5;
-//scene.add(planeMesh);
+planeMesh.matrixAutoUpdate = false;
+planeMesh.updateMatrix();
+scene.add(planeMesh);
 
 let planetList = [];
 let shipList = [];
+let smokeParticleList = [];
 
 let radius = rand(500.0, 1000.0);
 let planet = spawnPlanet(rand(-1000.0, 1000.0), -150 - radius * 0.5, radius, rand(-3.0, 3.0),
@@ -142,8 +129,6 @@ function animate()
     t0 = t1;
 
     planeMesh.material.uniforms.u_time.value = time * 10;
-
-    spriteMaterial.uniforms.u_time.value = time;
 
     let noiseScale = [];
     let elevation = [];
@@ -216,10 +201,28 @@ function animate()
         let s = shipList[i];
         s.position.add(s.velocity.clone().multiplyScalar(delta));
 
+        if(s.position.distanceTo(s.lastSmokePos) > 3.0) {
+            s.lastSmokePos.copy(s.position);
+            spawnSmokeParticle(s.position);
+        }
+
         if(Math.abs(s.position.x) > 1000.0) {
             onShipOutside(s);
             shipList.splice(i, 1);
             spawnShipCd = rand(5.0, 10.0);
+        }
+    }
+
+    for(let i = 0; i < smokeParticleList.length; i++) {
+        let s = smokeParticleList[i];
+        s.life -= delta;
+        const l = s.life / s.lifeMax;
+        s.material.uniforms.u_time.value = l;
+        //s.position.add(s.velocity.clone().multiplyScalar(delta));
+
+        if(s.life <= 0.0) {
+            smokeParticleList.splice(i, 1);
+            scene.remove(s);
         }
     }
 
@@ -317,6 +320,7 @@ function spawnShip(x, y, z, scale, vx, vz)
     shipMesh.position.set(x, y, z);
     shipMesh.scale.setScalar(scale);
     shipMesh.velocity = new THREE.Vector3(vx, 0, vz);
+    shipMesh.lastSmokePos = shipMesh.position.clone();
 
     let vn = new THREE.Vector3(vx, 0, vz).normalize();
     let angle = Math.atan2(vn.x, vn.z);
@@ -343,4 +347,20 @@ function spawnRandomShip()
 function onShipOutside(ship)
 {
     scene.remove(ship);
+}
+
+function spawnSmokeParticle(pos)
+{
+    let spriteMaterial = matSmoke.clone();
+    spriteMaterial.uniforms.u_texture.value = texSmoke;
+    let smokeSprite = new THREE.Sprite(spriteMaterial);
+    smokeSprite.center.set(0.5, 0.5);
+    smokeSprite.position.copy(pos);
+    smokeSprite.scale.setScalar(rand(5.0, 8.0));
+    smokeSprite.rotation.z = rand(0.0, Math.PI * 2.0);
+    smokeSprite.life = 10.0;
+    smokeSprite.lifeMax = 10.0;
+
+    smokeParticleList.push(smokeSprite);
+    scene.add(smokeSprite);
 }

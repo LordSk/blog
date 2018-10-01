@@ -15,7 +15,10 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="smoke1.svg">
+   sodipodi:docname="smoke1.svg"
+   inkscape:export-filename="C:\Prog\lordsk_blog\new_design\smoke1.png"
+   inkscape:export-xdpi="6.0000005"
+   inkscape:export-ydpi="6.0000005">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -27,7 +30,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
      inkscape:cx="397.76236"
-     inkscape:cy="558.33792"
+     inkscape:cy="501.19506"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -55,6 +58,13 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-26.06665)">
+    <rect
+       style="fill:#020202;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-opacity:1"
+       id="rect829"
+       width="316.36606"
+       height="293.6875"
+       x="-4.9136906"
+       y="21.455341" />
     <ellipse
        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.39783898;stroke-opacity:1"
        id="path815"
