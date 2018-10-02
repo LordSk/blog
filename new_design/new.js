@@ -49,18 +49,6 @@ const matShip = new THREE.ShaderMaterial({
 	fragmentShader: document.getElementById('fragShip').textContent
 });
 
-const matTrail = new THREE.ShaderMaterial({
-
-	/*uniforms: {
-        u_time: 0,
-        u_texture: null
-    },*/
-    transparent: true,
-
-	vertexShader: document.getElementById('vertTrail').textContent,
-	fragmentShader: document.getElementById('fragTrail').textContent
-});
-
 camera.position.z = 0;
 camera.position.y = 20;
 camera.lookAt.y = 10;
@@ -97,10 +85,6 @@ planeMesh.rotation.x = -Math.PI * 0.5;
 planeMesh.matrixAutoUpdate = false;
 planeMesh.updateMatrix();
 scene.add(planeMesh);
-
-// ship trail geometry
-let trailGeo = new THREE.PlaneBufferGeometry(400, 3.0, 10, 1);
-trailGeo.applyMatrix( new THREE.Matrix4().makeTranslation( -200, -1.5, 0 ) );
 
 let planetList = [];
 let shipList = [];
@@ -301,20 +285,8 @@ function spawnShip(x, y, z, scale, vx, vz)
     let shipMesh = new THREE.Mesh(shipGeo, shipMat);
     shipMesh.scale.setScalar(scale);
 
-    let trailMat = matTrail.clone();
-    trailMat.side = THREE.DoubleSide;
-    let trailMesh = new THREE.Mesh(trailGeo, trailMat);
-    
-    trailMesh.scale.setScalar(1.0);
-    trailMesh.position.copy(shipMesh.position);
-    trailMesh.position.y = 1.0;
-    trailMesh.position.z = 10.0;
-    trailMesh.rotation.y = Math.PI * 0.5;
-    trailMesh.renderOrder = 1;
-
     let shipGroup = new THREE.Group();
     shipGroup.add(shipMesh);
-    shipGroup.add(trailMesh);
     shipGroup.velocity = new THREE.Vector3(vx, 0, vz);
 
     let vn = new THREE.Vector3(vx, 0, vz).normalize();
