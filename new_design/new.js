@@ -10,8 +10,9 @@ let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 let camera = new THREE.PerspectiveCamera( 30, rdrWidth / rdrHeight, 0.001, 5000 );
 
-let renderer = new THREE.WebGLRenderer({antialias: true});
+let renderer = new THREE.WebGLRenderer({antialias: true, logarithmicDepthBuffer: false});
 renderer.setSize( rdrWidth, rdrHeight );
+renderer.setPixelRatio( window.devicePixelRatio );
 $('#animatedHeader').get(0).appendChild( renderer.domElement );
 
 const noiseScale = new THREE.Vector4(0.005, 0.01, 0.03, 0.1);
@@ -48,16 +49,16 @@ const matShip = new THREE.ShaderMaterial({
 	fragmentShader: document.getElementById('fragShip').textContent
 });
 
-const matSmoke = new THREE.ShaderMaterial({
+const matTrail = new THREE.ShaderMaterial({
 
-	uniforms: {
+	/*uniforms: {
         u_time: 0,
         u_texture: null
-    },
+    },*/
     transparent: true,
 
-	vertexShader: document.getElementById('vertSmoke').textContent,
-	fragmentShader: document.getElementById('fragSmoke').textContent
+	vertexShader: document.getElementById('vertTrail').textContent,
+	fragmentShader: document.getElementById('fragTrail').textContent
 });
 
 camera.position.z = 0;
@@ -74,6 +75,7 @@ let shipGeo = null;
 objLoader.load('ship6.obj',
 	function(object) { // done
         shipGeo = object.children[0].geometry;
+        //spawnShip(0, 10.0, -50.0, 10.0, 1.0, 0.0);
 	},
 	function(xhr) { // progress
 		//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
@@ -82,12 +84,6 @@ objLoader.load('ship6.obj',
 		console.log('Could not load ship6.obj');
 	}
 );
-
-// smoke texture
-let texSmoke = new THREE.TextureLoader().load("smoke1.png");
-texSmoke.wrapS = THREE.ClampToEdgeWrapping;
-texSmoke.wrapT = THREE.ClampToEdgeWrapping;
-texSmoke.repeat.set(1, 1);
 
 // plane
 let planeGeo = new THREE.PlaneBufferGeometry(1200, 300, 600, 300);
@@ -101,6 +97,10 @@ planeMesh.rotation.x = -Math.PI * 0.5;
 planeMesh.matrixAutoUpdate = false;
 planeMesh.updateMatrix();
 scene.add(planeMesh);
+
+// ship trail geometry
+let trailGeo = new THREE.PlaneBufferGeometry(400, 3.0, 10, 1);
+trailGeo.applyMatrix( new THREE.Matrix4().makeTranslation( -200, -1.5, 0 ) );
 
 let planetList = [];
 let shipList = [];
@@ -201,28 +201,10 @@ function animate()
         let s = shipList[i];
         s.position.add(s.velocity.clone().multiplyScalar(delta));
 
-        if(s.position.distanceTo(s.lastSmokePos) > 3.0) {
-            s.lastSmokePos.copy(s.position);
-            spawnSmokeParticle(s.position);
-        }
-
         if(Math.abs(s.position.x) > 1000.0) {
             onShipOutside(s);
             shipList.splice(i, 1);
             spawnShipCd = rand(5.0, 10.0);
-        }
-    }
-
-    for(let i = 0; i < smokeParticleList.length; i++) {
-        let s = smokeParticleList[i];
-        s.life -= delta;
-        const l = s.life / s.lifeMax;
-        s.material.uniforms.u_time.value = l;
-        //s.position.add(s.velocity.clone().multiplyScalar(delta));
-
-        if(s.life <= 0.0) {
-            smokeParticleList.splice(i, 1);
-            scene.remove(s);
         }
     }
 
@@ -276,7 +258,7 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
 function spawnMoon(planet, radius, dist, cx, cy, vx, vy, vz, speed)
 {
     let moonMesh = new THREE.Mesh(planetGeo, matPlanet.clone());
-    const c = rand(0.5, 0.8);
+    const c = rand(0.5, 0.7);
     moonMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c, c);
     let polar = new THREE.Spherical(planet.radius + dist, cx, cy);
     let local = new THREE.Vector3().setFromSpherical(polar);
@@ -315,19 +297,33 @@ function rand(min, max)
 function spawnShip(x, y, z, scale, vx, vz)
 {
     let shipMat = matShip.clone();
-    shipMat.uniforms.u_color.value.set(0, 0, 0);
+    shipMat.uniforms.u_color.value.set(0.3, 0.3, 0.3);
     let shipMesh = new THREE.Mesh(shipGeo, shipMat);
-    shipMesh.position.set(x, y, z);
     shipMesh.scale.setScalar(scale);
-    shipMesh.velocity = new THREE.Vector3(vx, 0, vz);
-    shipMesh.lastSmokePos = shipMesh.position.clone();
+
+    let trailMat = matTrail.clone();
+    trailMat.side = THREE.DoubleSide;
+    let trailMesh = new THREE.Mesh(trailGeo, trailMat);
+    
+    trailMesh.scale.setScalar(1.0);
+    trailMesh.position.copy(shipMesh.position);
+    trailMesh.position.y = 1.0;
+    trailMesh.position.z = 10.0;
+    trailMesh.rotation.y = Math.PI * 0.5;
+    trailMesh.renderOrder = 1;
+
+    let shipGroup = new THREE.Group();
+    shipGroup.add(shipMesh);
+    shipGroup.add(trailMesh);
+    shipGroup.velocity = new THREE.Vector3(vx, 0, vz);
 
     let vn = new THREE.Vector3(vx, 0, vz).normalize();
     let angle = Math.atan2(vn.x, vn.z);
-    shipMesh.rotation.y = angle - Math.PI;
+    shipGroup.rotation.y = angle - Math.PI;
+    shipGroup.position.set(x, y, z);
 
-    scene.add(shipMesh);
-    shipList.push(shipMesh);
+    scene.add(shipGroup);
+    shipList.push(shipGroup);
 }
 
 function spawnRandomShip()
@@ -347,20 +343,4 @@ function spawnRandomShip()
 function onShipOutside(ship)
 {
     scene.remove(ship);
-}
-
-function spawnSmokeParticle(pos)
-{
-    let spriteMaterial = matSmoke.clone();
-    spriteMaterial.uniforms.u_texture.value = texSmoke;
-    let smokeSprite = new THREE.Sprite(spriteMaterial);
-    smokeSprite.center.set(0.5, 0.5);
-    smokeSprite.position.copy(pos);
-    smokeSprite.scale.setScalar(rand(5.0, 8.0));
-    smokeSprite.rotation.z = rand(0.0, Math.PI * 2.0);
-    smokeSprite.life = 10.0;
-    smokeSprite.lifeMax = 10.0;
-
-    smokeParticleList.push(smokeSprite);
-    scene.add(smokeSprite);
 }
