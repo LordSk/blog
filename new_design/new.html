@@ -30,7 +30,6 @@
 </div>
 <div id="animatedHeader"></div>
 <div class="content">
-    <h1 class="center">THOMAS LEROY</h1>
 </div>
 <!--<input type="text" id="noiseScale1" value="0.0"/>
 <input type="text" id="elevation1" value="0.0"/>
@@ -145,7 +144,27 @@ void main()
     float a = min(abs(vert_pos.z), 300.0) / 300.0;
     float f = pow(a, 4.0 * (1.0 - a*a));
     // lighting
-    float d = 0.7 + dot(normalize(vert_normal), normalize(-vec3(1, -1, 0.5))) * 0.3;
+    float d = 0.7 + dot(normalize(vert_normal), normalize(-vec3(0.1, -1, 0.1))) * 0.3;
+    gl_FragColor = vec4(mix(color * d, vec3(1), f), 1.0);
+}
+</div>
+
+<div style="display:none" id="fragTitle">
+uniform vec3 u_color;
+uniform float u_time;
+
+varying vec3 vert_pos;
+varying vec3 vert_normal;
+
+void main()
+{
+    vec3 color = u_color;
+
+    float a = min(abs(vert_pos.z), 300.0) / 300.0;
+    float f = pow(a, 4.0 * (1.0 - a*a));
+    // lighting
+    float d = 0.5 + dot(normalize(vert_normal), normalize(-vec3(0.0, 0.0, -1.0))) * 0.5;
+    d *= ((sin(u_time) + 1.0) * 0.5);
     gl_FragColor = vec4(mix(color * d, vec3(1), f), 1.0);
 }
 </div>

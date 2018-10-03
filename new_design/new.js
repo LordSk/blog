@@ -49,6 +49,16 @@ const matShip = new THREE.ShaderMaterial({
 	fragmentShader: document.getElementById('fragShip').textContent
 });
 
+const matTitle = new THREE.ShaderMaterial({
+
+	uniforms: {
+        u_color: { value: new THREE.Vector3(1, 0, 0) },
+        u_time: 0.0,
+	},
+	vertexShader: document.getElementById('vertPlanet').textContent,
+	fragmentShader: document.getElementById('fragTitle').textContent
+});
+
 camera.position.z = 0;
 camera.position.y = 20;
 camera.lookAt.y = 10;
@@ -64,6 +74,22 @@ objLoader.load('ship6.obj',
 	function(object) { // done
         shipGeo = object.children[0].geometry;
         //spawnShip(0, 10.0, -50.0, 10.0, 1.0, 0.0);
+	},
+	function(xhr) { // progress
+		//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+	},
+	function(error) { // error
+		console.log('Could not load ship6.obj');
+	}
+);
+
+// load title
+let titleGeo = null;
+objLoader.load('title.obj',
+	function(object) { // done
+        titleGeo = object.children[0].geometry;
+        titleGeo.computeBoundingBox();
+        spawnTitle();
 	},
 	function(xhr) { // progress
 		//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
@@ -89,6 +115,7 @@ scene.add(planeMesh);
 let planetList = [];
 let shipList = [];
 let smokeParticleList = [];
+let titleMesh = null;
 
 let radius = rand(500.0, 1000.0);
 let planet = spawnPlanet(rand(-1000.0, 1000.0), -150 - radius * 0.5, radius, rand(-3.0, 3.0),
@@ -189,6 +216,14 @@ function animate()
             onShipOutside(s);
             shipList.splice(i, 1);
             spawnShipCd = rand(5.0, 10.0);
+        }
+    }
+
+    if(titleMesh) {
+        titleMesh.material.uniforms.u_time.value = time;
+        titleMesh.position.add(titleMesh.velocity.clone().multiplyScalar(delta));
+        if(titleMesh.position.z > 10.0) {
+            titleMesh.position.z = -300.0;
         }
     }
 
@@ -316,4 +351,20 @@ function spawnRandomShip()
 function onShipOutside(ship)
 {
     scene.remove(ship);
+}
+
+function spawnTitle()
+{
+    let titleMat = matTitle.clone();
+    titleMat.uniforms.u_color.value.set(1.0, 0.0, 0.0);
+
+    titleMesh = new THREE.Mesh(titleGeo, titleMat);
+    titleMesh.scale.setScalar(10.0);
+    let size = new THREE.Vector3();
+    titleGeo.boundingBox.getSize(size);
+    const width = size.x;
+    titleMesh.position.set(width * -0.5 * 10.0, 22, -300);
+    titleMesh.velocity = new THREE.Vector3(0.0, 0.0, 6.0);
+
+    scene.add(titleMesh);
 }
