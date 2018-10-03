@@ -31,6 +31,7 @@ canvas {
     position: absolute;
     top: 0;
     left: 0;
+    width: 100%;
 }
 
 .topBar ul {
@@ -40,13 +41,63 @@ canvas {
     padding: 10px;
 }
 
-.topBar a {
+.topBar a, .topBar a:visited {
     color: #a2a2a2;
     text-decoration: none;
     padding: 5px 10px 5px 10px;
     font-weight: bold;
 }
 
-.topBar a:hover, .topBar a:visited {
+.topBar a:hover {
     color: #000;
+}
+
+.topBar .left {
+    float: left;
+}
+
+.topBar .right {
+    float: right;
+}
+
+.topBar .right a {
+    padding: 0;
+    margin: 5px;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+a#twitter {
+    background-image: url('twitter_grey.png');
+}
+
+a#twitter:hover {
+    background-image: url('twitter.png');
+}
+
+a#github {
+    background-image: url('github_40_grey.png');
+}
+
+a#github:hover {
+    background-image: url('github_40.png');
+}
+
+a#linkedin {
+    background-image: url('linkedin_grey.png');
+}
+
+a#linkedin:hover {
+    background-image: url('linkedin.png');
+}
+
+a#mail {
+    background-image: url('mail_grey.png');
+}
+
+a#mail:hover {
+    background-image: url('mail.png');
 }

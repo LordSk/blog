@@ -281,7 +281,8 @@ function rand(min, max)
 function spawnShip(x, y, z, scale, vx, vz)
 {
     let shipMat = matShip.clone();
-    shipMat.uniforms.u_color.value.set(0.3, 0.3, 0.3);
+    const c = rand(0.0, 0.2);
+    shipMat.uniforms.u_color.value.set(c, c, c);
     let shipMesh = new THREE.Mesh(shipGeo, shipMat);
     shipMesh.scale.setScalar(scale);
 
