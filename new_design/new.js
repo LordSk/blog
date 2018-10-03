@@ -89,7 +89,7 @@ objLoader.load('title.obj',
 	function(object) { // done
         titleGeo = object.children[0].geometry;
         titleGeo.computeBoundingBox();
-        spawnTitle();
+        //spawnTitle();
 	},
 	function(xhr) { // progress
 		//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
@@ -237,7 +237,7 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
     moonCount = Math.round(moonCount);
     let planetMesh = new THREE.Mesh(planetGeo, matPlanet.clone());
     const c = rand(0.6, 0.85);
-    planetMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c, c);
+    planetMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c + 0.05, c + 0.1);
     planetMesh.position.x = x;
     planetMesh.position.y = y;
     planetMesh.position.z = -2000;
@@ -247,6 +247,7 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
     scene.add(planetMesh);
     planetList.push(planetMesh);
 
+    // spawn moons
     if(Math.random() > 0.5) {
         //console.log("moons: ", moonCount);
         for(let i = 0; i < moonCount; i++) {
@@ -255,12 +256,13 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
                 rand(-1.0, 1.0), rand(-1.0, 1.0), rand(-1.0, 1.0), rand(10.0, 30.0));
         }
     }
+    // spawn a ring
     else {
         //console.log("ring");
         let ringMat = matPlanet.clone();
         ringMat.side = THREE.DoubleSide;
-        const c = rand(0.6, 0.95);
-        ringMat.uniforms.u_color.value = new THREE.Vector3(c, c, c);
+        const c = rand(-0.1, 0.1);
+        ringMat.uniforms.u_color.value = new THREE.Vector3(0.17 + c, 0.53 + c, 0.70 + c);
         let ringMesh = new THREE.Mesh(ringGeo, ringMat);
         ringMesh.scale.x = radius * 1.8;
         ringMesh.scale.y = radius * 1.8;
@@ -277,8 +279,8 @@ function spawnPlanet(x, y, radius, dx, dy, moonCount)
 function spawnMoon(planet, radius, dist, cx, cy, vx, vy, vz, speed)
 {
     let moonMesh = new THREE.Mesh(planetGeo, matPlanet.clone());
-    const c = rand(0.5, 0.7);
-    moonMesh.material.uniforms.u_color.value = new THREE.Vector3(c, c, c);
+    const c = rand(-0.1, 0.1);
+    moonMesh.material.uniforms.u_color.value = new THREE.Vector3(0.17 + c, 0.53 + c, 0.70 + c);
     let polar = new THREE.Spherical(planet.radius + dist, cx, cy);
     let local = new THREE.Vector3().setFromSpherical(polar);
     moonMesh.position.x = planet.position.x + local.x;
@@ -316,8 +318,8 @@ function rand(min, max)
 function spawnShip(x, y, z, scale, vx, vz)
 {
     let shipMat = matShip.clone();
-    const c = rand(0.0, 0.2);
-    shipMat.uniforms.u_color.value.set(c, c, c);
+    //const c = rand(0.0, 0.2);
+    shipMat.uniforms.u_color.value.set(0.17, 0.53, 0.70);
     let shipMesh = new THREE.Mesh(shipGeo, shipMat);
     shipMesh.scale.setScalar(scale);
 

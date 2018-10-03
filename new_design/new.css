@@ -1,5 +1,10 @@
 /* */
 
+@font-face {
+    font-family: adam;
+    src: url('ADAM.CG PRO.otf');
+}
+
 body {
     font-family: Calibri;
     padding: 0;
@@ -100,4 +105,23 @@ a#mail {
 
 a#mail:hover {
     background-image: url('mail.png');
+}
+
+.pageTitle {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+}
+
+.pageTitle h1 {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    font-size: 3em;
+    font-family: adam;
+}
+
+h1 .firstname {
+    color: rgb(45, 137, 180);
 }
