@@ -20,18 +20,6 @@ canvas {
     height: 300px;
 }
 
-.content {
-    background: #000;
-    color: #fff;
-    height: 500px;
-}
-
-.content h1 {
-    margin: 0;
-    padding: 10px;
-    text-align: center;
-}
-
 .topBar {
     position: absolute;
     top: 0;
@@ -47,7 +35,7 @@ canvas {
 }
 
 .topBar a, .topBar a:visited {
-    color: #a2a2a2;
+    color: rgba(0, 0, 0, 0.5);
     text-decoration: none;
     padding: 5px 10px 5px 10px;
     font-weight: bold;
@@ -55,6 +43,10 @@ canvas {
 
 .topBar a:hover {
     color: #000;
+}
+
+.topBar a:active {
+    color: rgb(0, 135, 197);
 }
 
 .topBar .left {
@@ -122,6 +114,50 @@ a#mail:hover {
     font-family: adam;
 }
 
-h1 .firstname {
+.textBlue {
     color: rgb(45, 137, 180);
+}
+
+.textBlack {
+    color: #0534a5;
+}
+
+.blackPadding {
+    height: 100px;
+    background: #000;
+}
+
+.content {
+    color: #fff;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.content h1 {
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.content .accent {
+    background: #fff;
+    border-radius: 5px;
+    color: rgb(45, 137, 180);
+    padding: 0 5px 0 5px;
+}
+
+.content .blockSubtitle {
+    background: rgb(45, 137, 180);
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.blockSubtitle p {
+    width: 80%;
+    margin: 20px auto;
+    font-size: 1.2em;
+}
+
+.content .blockDevWeb {
+    background: #000;
 }
