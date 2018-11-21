@@ -36,29 +36,78 @@
 <div class="content">
     <div class="blockSubtitle">
         <h1>Native <span class="textBlack">&</span> Web Developper</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem ante, ornare quis accumsan dignissim, pharetra sed neque. Nam vehicula blandit ante, non vestibulum nisl feugiat dapibus. Quisque eget lacus eget elit bibendum fringilla vitae eget mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc vitae dignissim ante. Morbi iaculis, tellus vulputate eleifend vestibulum, diam quam posuere metus, nec tristique metus libero id urna. Donec posuere arcu egestas tempor maximus. In id velit eget nulla gravida lacinia et sit amet dui. Pellentesque auctor pulvinar eros nec tincidunt. Curabitur viverra nisi non fermentum tempor. Duis massa mauris, facilisis vel lorem eu, ornare tristique ligula. Fusce faucibus posuere accumsan. 
+        <p>Since a young age I have always been passionated about building things.
+            Growing up did not change this, only the medium. 
+            I now build digital tools, suited to user need.
+            I specialize in high performance desktop applications, as well as dynamic web applications.
         </p>
     </div>
     <div class="blockDev">
         <div class="devWeb">
             <img class="logoDevCategory" src="web_logo.png" />
+            <p>Create <b>responsive</b> websites that work on a wide range of devices</p>
+            <p>Bridge communication gap between designers and developers</p>
+            <p>Design beautiful and interactive experiences with <b>WebGL</b></p>
+            <p></p>
 
-            <ul>
-                <li>Front-End:</li>
-                <li>Back-End:</li>
-            </ul>
+            <h1>Dev Tools</h1>
+            <div class="blockTools">
+                <div>
+                    <img class="toolImg" src="cpu_white.png" width="100px" height="100px">
+                </div>
+                <div class="toolList">
+                    <p>Javascript</p>
+                    <p>Php</p>
+                    <p>Python</p>
+                    <p>HTML5 & CSS</p>
+                    <p>Visual Studio Code</p>
+                </div>
+            </div>
         </div>
         <div class="devNative">
             <img class="logoDevCategory" src="win_logo.png" />
-            <ul>
-                <li>Front-End:</li>
-                <li>Back-End:</li>
-            </ul>
+            <p><b>High-performance</b> and <b>multithreaded</b> windows applications</p>
+            <p>User interfaces with <b>Qt</b> and <b>ImGui</b></p>
+            <p>Beautiful <b>3D graphics</b> with <b>OpenGL</b> and <b>bgfx</b></p>
+            <p>Memory efficiency and cache awareness thanks to Data oriented design</p>
+
+            <h1>Dev Tools</h1>
+            <div class="blockTools">
+                <div>
+                    <img class="toolImg" src="cpu_black.png" width="100px" height="100px">
+                </div>
+                <div class="toolList">
+                    <p>C/C++</p>
+                    <p>Git</p>
+                    <p>OpenGL</p>
+                    <p>Bgfx</p>
+                    <p>Qt Creator</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="blockCurrentWork">
+        <h1>Currently working on...</h1>
+        <div class="cwContent divFlex">
+            <div>
+                <img src="splashtee6.png" height="330px">
+            </div>
+            <div>
+                <img src="twlogo.png">
+                <div class="twDesc">
+                    <p>Teeworlds is a competitive multiplayer 2D game, enjoyed by thousands.</p>
+                    <p>Available on <a href="https://store.steampowered.com/app/380840/Teeworlds/">Steam</a></p>
+                    <p>It is also <a href="https://github.com/teeworlds/teeworlds">open source</a></p>
+                    <br>
+                    <p>I am part of the main development team. Working on ux/ui, graphics and gameplay.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <div class="footer">
-    <p>Thomas 'LordSk' Leroy</p>
+    <p>Copyright © 2018 Thomas Leroy</p>
 </div>
 <!--<input type="text" id="noiseScale1" value="0.0"/>
 <input type="text" id="elevation1" value="0.0"/>
@@ -111,12 +160,12 @@ float snoise(vec2 v)
 void main()
 {
     vec4 pos = modelMatrix * vec4(position, 1.0);
-    float far = max(0.0, -pos.z) / 300.0;
-    float y1 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.x) * (u_elevation.x * 1.0 + far * 10.0);
+    float far = max(0.0, -pos.z) / 400.0;
+    float y1 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.x) * u_elevation.x;
     float y2 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.y) * u_elevation.y;
     float y3 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.z) * u_elevation.z;
     float y4 = snoise(vec2(pos.x, pos.z-u_time) * u_noiseScale.w) * u_elevation.w;
-    pos.y += y1 + y2 + y3 + y4;
+    pos.y += y1 + y2 + y3 + y4 + 20.0 * (far * far);
 
     gl_Position = projectionMatrix * viewMatrix * pos;
     vert_pos = pos.xyz;
@@ -128,8 +177,10 @@ varying vec3 vert_pos;
 
 void main()
 {
-    float f = min(abs(vert_pos.z), 300.0) / 300.0;
-    gl_FragColor = vec4(vec3(pow(f, 6.0 * (1.0 - f*f))), 1.0);
+    float f = min(abs(vert_pos.z), 400.0) / 400.0;
+    vec3 color1 = vec3(0, 0.015, 0.20);
+    vec3 color2 = vec3(1);
+    gl_FragColor = vec4(mix(color1, color2, pow(f, 5.0 * (1.0 - f*f))), 1.0);
 }
 </div>
 

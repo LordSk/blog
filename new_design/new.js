@@ -1,10 +1,7 @@
-//
-
-// TODO: vaisseaux bight colored qui traversent
-// smoke trail
+// LordSk 2018
 
 const rdrWidth = window.innerWidth;
-const rdrHeight = 300;
+const rdrHeight = 400;
 
 let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
@@ -100,12 +97,13 @@ objLoader.load('title.obj',
 );
 
 // plane
-let planeGeo = new THREE.PlaneBufferGeometry(1200, 300, 600, 300);
+const planeDepth = 400;
+let planeGeo = new THREE.PlaneBufferGeometry(1200, planeDepth, 600, 400);
 let planeMaterial = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
 let planeMesh = new THREE.Mesh(planeGeo, matDepth);
 
 planeMesh.position.x = 0;
-planeMesh.position.z = -150;
+planeMesh.position.z = -planeDepth * 0.5;
 planeMesh.position.y = 0;
 planeMesh.rotation.x = -Math.PI * 0.5;
 planeMesh.matrixAutoUpdate = false;
@@ -115,7 +113,6 @@ scene.add(planeMesh);
 let planetList = [];
 let shipList = [];
 let smokeParticleList = [];
-let titleMesh = null;
 
 let radius = rand(500.0, 1000.0);
 let planet = spawnPlanet(rand(-1000.0, 1000.0), -radius * 0.5, radius, rand(-3.0, 3.0),
@@ -130,9 +127,7 @@ let spawnShipCd = 3.0;
 
 function animate()
 {
-    //setTimeout(function() {
-        requestAnimationFrame(animate);
-    //}, 1000/60.0);
+    requestAnimationFrame(animate);
     
     let t1 = timeClock.getElapsedTime();
     let delta = (t1 - t0) * timeScale;
@@ -141,13 +136,13 @@ function animate()
 
     planeMesh.material.uniforms.u_time.value = time * 10;
 
-    let noiseScale = [];
+    /*let noiseScale = [];
     let elevation = [];
 
-    /*for(let i = 1; i < 5; i++) {
+    for(let i = 1; i < 5; i++) {
         noiseScale[i-1] = parseFloat($('#noiseScale' + i).val());
         elevation[i-1] = parseFloat($('#elevation' + i).val());
-    }*/
+    }
 
     //console.log(time);
     //console.log(noiseScale1, noiseScale2);
@@ -216,14 +211,6 @@ function animate()
             onShipOutside(s);
             shipList.splice(i, 1);
             spawnShipCd = rand(5.0, 10.0);
-        }
-    }
-
-    if(titleMesh) {
-        titleMesh.material.uniforms.u_time.value = time;
-        titleMesh.position.add(titleMesh.velocity.clone().multiplyScalar(delta));
-        if(titleMesh.position.z > 10.0) {
-            titleMesh.position.z = -300.0;
         }
     }
 
@@ -344,7 +331,7 @@ function spawnRandomShip()
     const dx = rand(0.0, 1.0) > 0.5 ? 1.0: -1.0;
     let v = new THREE.Vector2(-dx * 1200.0, zend - z).setLength(speed);
     let x = 600.0 * dx;
-    let y = 25.0;
+    let y = 27.0;
     let scale = rand(8.0, 12.0);
     //console.log('spawn ship', x, y, z, v);
     spawnShip(x, y, z, scale, v.x, v.y);
