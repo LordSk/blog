@@ -67,26 +67,10 @@ let objLoader = new THREE.OBJLoader();
 let shipGeo = null;
 
 // load ship model
-objLoader.load('ship6.obj',
+objLoader.load('home/ship6.obj',
 	function(object) { // done
         shipGeo = object.children[0].geometry;
         //spawnShip(0, 10.0, -50.0, 10.0, 1.0, 0.0);
-	},
-	function(xhr) { // progress
-		//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-	},
-	function(error) { // error
-		console.log('Could not load ship6.obj');
-	}
-);
-
-// load title
-let titleGeo = null;
-objLoader.load('title.obj',
-	function(object) { // done
-        titleGeo = object.children[0].geometry;
-        titleGeo.computeBoundingBox();
-        //spawnTitle();
 	},
 	function(xhr) { // progress
 		//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
