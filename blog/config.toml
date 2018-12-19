@@ -1,47 +1,18 @@
-baseURL = "https://lordsk.github.io/"
+baseURL = "https://lordsk.github.io/blog/"
 languageCode = "en-us"
 title = "Programming adventures"
-theme = "robust"
 author = "LordSk"
+theme = "arabica"
 disqusShortname = "lordskblog"
+copyright = "Thomas Leroy"
 
 # Enable Google Analytics by entering your tracking code
 googleAnalytics = ""
 preserveTaxonomyNames = true
-paginate = 5 #frontpage pagination
+paginate = 5
 
 [params]
-slogan = ""
-description = "A blog for my various projects" # meta description
-authorLink = "https://lordsk.github.io/"
-bio = [
-""
-]
-copyright = [
-"&copy; 2018 Thomas 'LordSk' Leroy",
-]
-
-# Nav links in the side bar
-[[params.navlinks]]
-name = "Home"
-url = ""
-
-[[params.navlinks]]
-name = "CV"
-url = "cv/cv_fr"
-
-[[params.navlinks]]
-name = "Contact"
-url = "contact/contact"
-
-[params.social]
-twitter = "https://twitter.com/LordSk_"
-github  = "https://github.com/LordSk"
-
-[params.author]
-thumbnail = ""
-name = "Thomas 'LordSk' Leroy"
-description = ""
-facebook = ""
-twitter = "https://twitter.com/LordSk_"
-github = "https://github.com/LordSk"
+    description = "A simple blog about my projects"
+    dateFormatToUse = "02/01/2006"
+    replaceGoogleFonts = "fonts.loli.net"
+    twitter = "LordSk_"
