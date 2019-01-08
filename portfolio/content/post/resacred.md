@@ -1,8 +1,10 @@
----
-title: "Resacred"
-date: 2019-01-08T15:16:44+01:00
-draft: true
----
++++
+color = "255, 255, 255"
+date = "2019-01-08T15:42:55+01:00"
+draft = true
+image = "images/resacred_1.png"
+tags = []
+title = "Resacred"
++++
 
-dmkqpdok qspodjsq oijsqoi jqosi d
-
+dssqdqsd sqdsqdsqdqsqsdsd
