@@ -1,0 +1,5 @@
+# Site settings
+baseurl = "http://lordsk.github.io/portfolio"
+languageCode = "en-us"
+title = "Portfolio - Thomas Leroy"
+theme = "theme_portfolio"
