@@ -2,15 +2,21 @@
 <html>
     <head>
         <title>{{ .Title }}</title>
-        <link rel="stylesheet" type="text/css" href="{{ "css/spectre.min.css" | relURL }}">
-        <link rel="stylesheet" type="text/css" href="{{ "css/portfolio.css" | relURL }}">
+        <link rel="stylesheet" type="text/css" href="{{ "spectre.min.css" | relURL }}">
+        <link rel="stylesheet" type="text/css" href="{{ "portfolio.css" | relURL }}">
     </head>
 <body>
     <div class="header">
+        <ul class="columns nav_bar">
+            <li class="d-inline-block"><a href="/">HOME</a></li>
+            <li class="d-inline-block"><a href="/blog">BLOG</a></li>
+            <li class="d-inline-block"><a href="/portfolio">PORTFOLIO</a></li>
+            <li class="d-inline-block"><a href="/contact">CONTACT</a></li>
+        </ul>
         <div class="centered">
             <div class="title">
                 <h1 class="text-center">THOMAS LEROY</h1>
-                <h3 class="text-center">PORTFOLIO</h3>
+                <h3 class="text-center">portfolio</h3>
             </div>
         </div>
     </div>
@@ -24,6 +30,9 @@
             </div>
         {{ end }}
         </div>
+    </div>
+    <div class="footer">
+
     </div>
 </body>
 <style>
