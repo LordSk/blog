@@ -1,68 +1,50 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{ .Title }}</title>
-        <link rel="stylesheet" type="text/css" href="{{ "spectre.min.css" | relURL }}">
-        <link rel="stylesheet" type="text/css" href="{{ "portfolio.css" | relURL }}">
-    </head>
-<body>
-    <div class="header">
-        <ul class="columns nav_bar">
-            <li class="d-inline-block"><a href="/">HOME</a></li>
-            <li class="d-inline-block"><a href="/blog">BLOG</a></li>
-            <li class="d-inline-block"><a href="/portfolio">PORTFOLIO</a></li>
-            <li class="d-inline-block"><a href="/contact">CONTACT</a></li>
-        </ul>
-        <div class="centered">
-            <div class="title">
-                <h1 class="text-center">THOMAS LEROY</h1>
-                <h3 class="text-center">portfolio</h3>
-            </div>
-        </div>
-    </div>
+{{ partial "header.html" . }}
+
     <div class="content">
         <div class="columns col-gapless">
         {{ range first 10 .Data.Pages }}
             <div class="column col-6 col-md-12" id="block_{{ .Title }}">
-                <div class="overlay centered">
-                    <h1 class="d-inline-block">{{ .Title }}</h1>
-                </div>
+                <a href={{ .Permalink }}>
+                    <div class="overlay centered">
+                        <h1 class="d-inline-block">{{ .Title }}</h1>
+                    </div>
+                </a>
             </div>
         {{ end }}
         </div>
     </div>
-    <div class="footer">
-
-    </div>
-</body>
-<style>
-    {{ range first 10 .Data.Pages }}
-        #block_{{ .Title }} {
-            height: 500px;
-            background-image: url("{{ .Params.image | relURL }}");
-            background-size: cover;
-            background-position: center;
-        }
-
-        @keyframes fade_out_{{ .Title }} {
-            from {background-color: rgba({{ .Params.color }}, 1.0);}
-            to {background-color: rgba({{ .Params.color }}, 0.0);}
-        }
-
-        @keyframes fade_in_{{ .Title }} {
-            from {background-color: rgba({{ .Params.color }}, 0.0);}
-            to {background-color: rgba({{ .Params.color }}, 1.0);}
-        }
-
-        #block_{{ .Title }} .overlay {
-            animation: fade_out_{{ .Title }} 0.25s;
-            background-color: rgba({{ .Params.color }}, 0.0);
-        }
-
-        #block_{{ .Title }} .overlay:hover {
-            animation: fade_in_{{ .Title }} 0.5s;
-            background-color: rgba({{ .Params.color }}, 1.0);
-        }
-    {{ end }}
-</style>
-</html>
+    <style>
+        {{ range first 10 .Data.Pages }}
+            #block_{{ .Title }} {
+                height: 500px;
+                background-image: url("{{ .Params.image | relURL }}");
+                background-size: cover;
+                background-position: center;
+            }
+    
+            @keyframes fade_out_{{ .Title }} {
+                from {background-color: rgba({{ .Params.color }}, 1.0);}
+                to {background-color: rgba({{ .Params.color }}, 0.0);}
+            }
+    
+            @keyframes fade_in_{{ .Title }} {
+                from {background-color: rgba({{ .Params.color }}, 0.0);}
+                to {background-color: rgba({{ .Params.color }}, 1.0);}
+            }
+    
+            #block_{{ .Title }} .overlay {
+                animation: fade_out_{{ .Title }} 0.25s;
+                background-color: rgba({{ .Params.color }}, 0.0);
+            }
+    
+            #block_{{ .Title }} .overlay:hover {
+                animation: fade_in_{{ .Title }} 0.5s;
+                background-color: rgba({{ .Params.color }}, 1.0);
+            }
+    
+            #block_{{ .Title }} .overlay:active {
+                background-color: rgba({{ .Params.color }}, 1.0);
+            }
+        {{ end }}
+    </style>
+{{ partial "footer.html" . }}
