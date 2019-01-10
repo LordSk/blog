@@ -1,8 +1,21 @@
 {{ partial "header.html" . }}
 
-<div class="content">
-  <h1>{{ .Title }}</h1>
-  {{ .Content }}
+<div class="content post">
+  <div class="postContent text-center">
+      <h1 class="">{{ .Title }}</h1>
+      <div class="tags">
+        {{ range .Params.tags }}
+          <span class="tag">{{ . }}</span>
+        {{ end }}
+      </div>
+      {{ .Content }}
+  </div>
 </div>
+
+<style>
+.postContent .tag {
+  background: rgb({{ .Params.color }});
+}
+</style>
 
 {{ partial "footer.html" . }}

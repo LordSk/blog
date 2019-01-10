@@ -4,7 +4,7 @@
         <div class="columns col-gapless">
         {{ range first 10 .Data.Pages }}
             <div class="column col-6 col-md-12" id="block_{{ .Title }}">
-                <a href={{ .Permalink }}>
+                <a href={{ .Permalink }} class="blockLink">
                     <div class="overlay centered">
                         <h1 class="d-inline-block">{{ .Title }}</h1>
                     </div>
@@ -43,6 +43,7 @@
             }
     
             #block_{{ .Title }} .overlay:active {
+                animation: none;
                 background-color: rgba({{ .Params.color }}, 1.0);
             }
         {{ end }}

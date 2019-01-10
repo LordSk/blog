@@ -69,3 +69,41 @@ body {
 .footer {
     height: 200px;
 }
+
+a.blockLink {
+    text-decoration: none;
+}
+
+.postImg img {
+    border-radius: 5px;
+    margin: 0 auto;
+    margin-top: 15px;
+}
+
+.content.post {
+    width: 100%;
+    border-top: 1px solid #e9e6ff;
+    border-bottom: 1px solid #e9e6ff;
+}
+
+.postContent {
+    width: 90%;
+    padding-top: 50px;
+    margin: 0 auto;
+}
+
+.postContent p {
+    margin: 0;
+}
+
+.postContent .tags {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.postContent .tag {
+    padding: 5px 10px 5px 10px;
+    background: #aaa;
+    border-radius: 5px;
+    color: #000;
+}
