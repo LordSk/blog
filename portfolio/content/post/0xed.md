@@ -13,8 +13,14 @@ Setup as many panels as you want, each with its own color gradient and data type
 
 Inspect selected byte string with the Inspector panel, Search for any type of data with the search command.
 
-*0xed is currently being worked on and as such is not recommended for professional use as of now.*
+*0xed is currently being worked on and thus is not recommended for professional use as of now.*
+
+<br>
 
 {{% img "images/0xed_0.png" %}}
 {{% img "images/0xed_1.png" %}}
 {{% img "images/0xed_2.png" %}}
+
+{{% imgur_album YuLRu %}}
+
+*Progress album*
