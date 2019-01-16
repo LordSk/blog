@@ -1,7 +1,7 @@
 +++
 color = "74, 183, 20"
 date = "2019-01-08T15:42:55+01:00"
-draft = true
+draft = false
 image = "images/resacred_1.png"
 tags = ["C++", "OpenGL", "Multi-threading", "Reverse-Engineering", "x64dbg", "IDA"]
 title = "Resacred"
