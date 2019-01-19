@@ -1,5 +1,5 @@
 # Site settings
-baseurl = "http://lordsk.github.io/portfolio"
+baseurl = "https://tleroy.io/portfolio"
 languageCode = "en-us"
 title = "Portfolio - Thomas Leroy"
 theme = "theme_portfolio"
